@@ -1,4 +1,4 @@
-// +build !windows, !plan9
+// +build windows, plan9
 
 //Package gologging provides a logger implementation based on the github.com/op/go-logging pkg
 package gologging
@@ -6,7 +6,7 @@ package gologging
 import (
 	"fmt"
 	"io"
-	"log/syslog"
+
 	"os"
 
 	"github.com/devopsfaith/krakend/config"
@@ -43,16 +43,6 @@ func NewLogger(cfg config.ExtraConfig, ws ...io.Writer) (logging.Logger, error) 
 
 	if logConfig.StdOut {
 		ws = append(ws, os.Stdout)
-	}
-
-	if logConfig.Syslog {
-		var err error
-		var w *syslog.Writer
-		w, err = syslog.New(syslog.LOG_CRIT, logConfig.Prefix)
-		if err != nil {
-			return nil, err
-		}
-		ws = append(ws, w)
 	}
 
 	if logConfig.Format == "logstash" {
